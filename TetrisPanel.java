@@ -53,9 +53,7 @@ public class TetrisPanel extends JPanel implements KeyListener {
                 } else {
                     placedTetrominoesList.add(currentTetromino);
 
-                    if (!checkBelowCollision(new Sprite(5, -2, getBackground()))) {
-                        currentTetromino = new ISprite(5, 0);
-                    }
+                    currentTetromino = new ISprite(5, 0);
                 }
 
                 repaint();
@@ -66,33 +64,56 @@ public class TetrisPanel extends JPanel implements KeyListener {
         timer.start();
     }
 
-    public boolean checkSideCollision(Sprite t) {
-        for (Sprite tetromino : placedTetrominoesList) {
-            for (Tile tile : tetromino.getTileList()) {
-                if (tile.getY() == t.getY() && tile.getX() == t.getX() + 1 || tile.getX() == t.getX() - 1) {
-                    return true;
+    public boolean checkLeftCollision(Sprite sprite) {
+        for (Tile tile : sprite.tileList) {
+            for (Sprite tetromino : placedTetrominoesList) {
+                for (Tile placedTile : tetromino.getTileList()) {
+                    System.out.println(tile.getY() == placedTile.getY());
+                    if (tile.getY() == placedTile.getY() && tile.getX() - 1 == placedTile.getX()) {
+                        return true;
+                    }
                 }
             }
-        }
 
-        if (t.getX() >= horizontalLines - 1 || t.getX() <= 0) {
-            return true;
+            if (tile.getX() - 1 < 0) {
+                return true;
+            }
         }
 
         return false;
     }
 
-    public boolean checkBelowCollision(Sprite t) {
-        for (Sprite tetromino : placedTetrominoesList) {
-            for (Tile tile : tetromino.getTileList()) {
-                if (tile.getX() == t.getX() && tile.getY() == t.getY() + 1) {
-                    return true;
+    public boolean checkRightCollision(Sprite sprite) {
+        for (Tile tile : sprite.tileList) {
+            for (Sprite tetromino : placedTetrominoesList) {
+                for (Tile placedTile : tetromino.getTileList()) {
+                    if (tile.getY() == placedTile.getY() && tile.getX() + 1 == placedTile.getX()) {
+                        return true;
+                    }
                 }
+            }
+
+            if (tile.getX() + 1 >= horizontalLines) {
+                return true;
             }
         }
 
-        if (t.getY() >= verticalLines - 1) {
-            return true;
+        return false;
+    }
+
+    public boolean checkBelowCollision(Sprite sprite) {
+        for (Tile tile : sprite.tileList) {
+            for (Sprite tetromino : placedTetrominoesList) {
+                for (Tile placedTile : tetromino.getTileList()) {
+                    if (tile.getX() == placedTile.getX() && tile.getY() + 1 == placedTile.getY()) {
+                        return true;
+                    }
+                }
+            }
+
+            if (tile.getY() >= verticalLines - 1) {
+                return true;
+            }
         }
 
         return false;
@@ -135,27 +156,26 @@ public class TetrisPanel extends JPanel implements KeyListener {
 
     @Override
     public void keyPressed(KeyEvent e) {
-        if (!checkSideCollision(currentTetromino)) {
-            switch (e.getKeyCode()) {
-                case KeyEvent.VK_A:
+
+        switch (e.getKeyCode()) {
+            case KeyEvent.VK_A:
+            case KeyEvent.VK_LEFT:
+                if (!checkLeftCollision(currentTetromino)) {
                     currentTetromino.moveAllTiles(-1, 0);
-                    break;
+                    repaint();
+                }
+                break;
 
-                case KeyEvent.VK_LEFT:
-                    currentTetromino.moveAllTiles(-1, 0);
-                    break;
-
-                case KeyEvent.VK_D:
+            case KeyEvent.VK_D:
+            case KeyEvent.VK_RIGHT:
+                if (!checkRightCollision(currentTetromino)) {
                     currentTetromino.moveAllTiles(1, 0);
-                    break;
+                    repaint();
+                }
+                break;
 
-                case KeyEvent.VK_RIGHT:
-                    currentTetromino.moveAllTiles(1, 0);
-                    break;
-
-                default:
-                    break;
-            }
+            default:
+                break;
         }
     }
 

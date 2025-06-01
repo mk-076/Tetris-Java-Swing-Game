@@ -1,24 +1,22 @@
 import java.awt.Color;
 import java.util.ArrayList;
 
-public class Sprite extends Tile {
+public class Sprite {
     ArrayList<Tile> tileList;
     Color color;
 
-    public Sprite(int x, int y, Color color) {
-        super(x, y);
-
+    public Sprite(Color color) {
         tileList = new ArrayList<Tile>();
         this.color = color;
     }
 
-    public void moveAllTiles(int x, int y) {
+    public void moveAllTiles(int dx, int dy) {
         for (Tile tile : tileList) {
-            tile.x += x;
-            tile.y += y;
-        }
+            int x = tile.getX();
+            int y = tile.getY();
 
-        setPosition(tileList.get(0).getX(), tileList.get(0).getY());
+            tile.setPosition(x + dx, y + dy);
+        }
     }
 
     public ArrayList<Tile> getTileList() {
