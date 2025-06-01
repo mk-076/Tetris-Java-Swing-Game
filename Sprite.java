@@ -12,6 +12,15 @@ public class Sprite extends Tile {
         this.color = color;
     }
 
+    public void moveAllTiles(int x, int y) {
+        for (Tile tile : tileList) {
+            tile.x += x;
+            tile.y += y;
+        }
+
+        setPosition(tileList.get(0).getX(), tileList.get(0).getY());
+    }
+
     public ArrayList<Tile> getTileList() {
         return tileList;
     }
