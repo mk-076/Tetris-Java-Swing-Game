@@ -10,21 +10,12 @@ public class Sprite {
         this.color = color;
     }
 
-    public void moveAllTiles(int dx, int dy) {
-        for (Tile tile : tileList) {
-            int x = tile.getX();
-            int y = tile.getY();
-
-            tile.setPosition(x + dx, y + dy);
-        }
+    public void setColor(Color color) {
+        this.color = color;
     }
 
     public ArrayList<Tile> getTileList() {
         return tileList;
-    }
-
-    public void setColor(Color color) {
-        this.color = color;
     }
 
     public Color getColor() {

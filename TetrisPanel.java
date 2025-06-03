@@ -1,6 +1,7 @@
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Graphics;
+import java.awt.Point;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
@@ -11,9 +12,9 @@ import javax.swing.Timer;
 
 public class TetrisPanel extends JPanel implements KeyListener {
     int horizontalLines, verticalLines, tileSize;
-    ArrayList<Sprite> placedTetrominoesList;
-    Sprite[] tetrominoes;
-    Sprite currentTetromino;
+    ArrayList<Tetromino> placedTetrominoesList;
+    Tetromino[] tetrominoes;
+    Tetromino currentTetromino;
 
     // Game Loop
     Timer timer;
@@ -34,13 +35,11 @@ public class TetrisPanel extends JPanel implements KeyListener {
         this.tileSize = tileSize;
 
         // Initializing Tetrominoes
-        tetrominoes = new Sprite[2];
-        tetrominoes[0] = new ISprite(horizontalLines, 0);
-        tetrominoes[1] = new ISprite(horizontalLines, 0);
+        tetrominoes = new Tetromino[2];
 
         // Initializing PlacedTetrominoesList
-        placedTetrominoesList = new ArrayList<Sprite>();
-        currentTetromino = new ISprite(5, 0);
+        placedTetrominoesList = new ArrayList<Tetromino>();
+        currentTetromino = new ITetromino(new Point(5, 0));
 
         // Initializing Game Loop
         timer = new Timer(200, new ActionListener() {
@@ -53,7 +52,7 @@ public class TetrisPanel extends JPanel implements KeyListener {
                 } else {
                     placedTetrominoesList.add(currentTetromino);
 
-                    currentTetromino = new ISprite(5, 0);
+                    currentTetromino = new ITetromino(new Point(5, 0));
                 }
 
                 repaint();
@@ -64,10 +63,10 @@ public class TetrisPanel extends JPanel implements KeyListener {
         timer.start();
     }
 
-    public boolean checkLeftCollision(Sprite sprite) {
-        for (Tile tile : sprite.tileList) {
-            for (Sprite tetromino : placedTetrominoesList) {
-                for (Tile placedTile : tetromino.getTileList()) {
+    public boolean checkLeftCollision(Tetromino tetromino) {
+        for (Tile tile : tetromino.getTileList()) {
+            for (Tetromino placedTetromino : placedTetrominoesList) {
+                for (Tile placedTile : placedTetromino.getTileList()) {
                     System.out.println(tile.getY() == placedTile.getY());
                     if (tile.getY() == placedTile.getY() && tile.getX() - 1 == placedTile.getX()) {
                         return true;
@@ -83,10 +82,10 @@ public class TetrisPanel extends JPanel implements KeyListener {
         return false;
     }
 
-    public boolean checkRightCollision(Sprite sprite) {
-        for (Tile tile : sprite.tileList) {
-            for (Sprite tetromino : placedTetrominoesList) {
-                for (Tile placedTile : tetromino.getTileList()) {
+    public boolean checkRightCollision(Tetromino tetromino) {
+        for (Tile tile : tetromino.getTileList()) {
+            for (Tetromino placedTetromino : placedTetrominoesList) {
+                for (Tile placedTile : placedTetromino.getTileList()) {
                     if (tile.getY() == placedTile.getY() && tile.getX() + 1 == placedTile.getX()) {
                         return true;
                     }
@@ -101,10 +100,10 @@ public class TetrisPanel extends JPanel implements KeyListener {
         return false;
     }
 
-    public boolean checkBelowCollision(Sprite sprite) {
-        for (Tile tile : sprite.tileList) {
-            for (Sprite tetromino : placedTetrominoesList) {
-                for (Tile placedTile : tetromino.getTileList()) {
+    public boolean checkBelowCollision(Tetromino tetromino) {
+        for (Tile tile : tetromino.getTileList()) {
+            for (Tetromino placedTetromino : placedTetrominoesList) {
+                for (Tile placedTile : placedTetromino.getTileList()) {
                     if (tile.getX() == placedTile.getX() && tile.getY() + 1 == placedTile.getY()) {
                         return true;
                     }
@@ -135,7 +134,7 @@ public class TetrisPanel extends JPanel implements KeyListener {
         }
 
         // Drawing Parts
-        for (Sprite tetromino : placedTetrominoesList) {
+        for (Tetromino tetromino : placedTetrominoesList) {
             for (Tile tile : tetromino.getTileList()) {
                 int x = tile.x * tileSize;
                 int y = tile.y * tileSize;
