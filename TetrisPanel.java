@@ -67,7 +67,6 @@ public class TetrisPanel extends JPanel implements KeyListener {
         for (Tile tile : tetromino.getTileList()) {
             for (Tetromino placedTetromino : placedTetrominoesList) {
                 for (Tile placedTile : placedTetromino.getTileList()) {
-                    System.out.println(tile.getY() == placedTile.getY());
                     if (tile.getY() == placedTile.getY() && tile.getX() - 1 == placedTile.getX()) {
                         return true;
                     }
