@@ -6,7 +6,7 @@ public class Tetromino extends Sprite {
     Point[] offsets;
 
     public Tetromino(Point pivot, Color color) {
-        super(Color.CYAN);
+        super(color);
 
         this.pivot = pivot;
     }
@@ -16,14 +16,24 @@ public class Tetromino extends Sprite {
 
         for (int i = 0; i < tileList.size(); i++) {
             Tile tile = tileList.get(i);
-            int x = (int) getPivot().x;
-            int y = (int) getPivot().y;
+            int x = (int) getPivot().getX();
+            int y = (int) getPivot().getY();
 
             tile.setPosition(x + offsets[i].x, y + offsets[i].y);
         }
     }
 
+    public void rotateClockwise() {
+        for (int i = 0; i < tileList.size(); i++) {
+            offsets[i].setLocation(offsets[i].getY(), offsets[i].getX());
+        }
+    }
+
     public Point getPivot() {
         return pivot;
+    }
+
+    public Point[] getOffsets() {
+        return offsets;
     }
 }

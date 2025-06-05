@@ -7,14 +7,16 @@ import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.util.ArrayList;
+import java.util.Random;
+
 import javax.swing.JPanel;
 import javax.swing.Timer;
 
 public class TetrisPanel extends JPanel implements KeyListener {
     int horizontalLines, verticalLines, tileSize;
     ArrayList<Tetromino> placedTetrominoesList;
-    Tetromino[] tetrominoes;
     Tetromino currentTetromino;
+    Random random;
 
     // Game Loop
     Timer timer;
@@ -34,12 +36,12 @@ public class TetrisPanel extends JPanel implements KeyListener {
         this.verticalLines = verticalLines;
         this.tileSize = tileSize;
 
-        // Initializing Tetrominoes
-        tetrominoes = new Tetromino[2];
-
         // Initializing PlacedTetrominoesList
         placedTetrominoesList = new ArrayList<Tetromino>();
-        currentTetromino = new ITetromino(new Point(5, 0));
+
+        random = new Random();
+
+        currentTetromino = getRandomTetromino();
 
         // Initializing Game Loop
         timer = new Timer(200, new ActionListener() {
@@ -51,16 +53,32 @@ public class TetrisPanel extends JPanel implements KeyListener {
                     currentTetromino.moveAllTiles(0, 1);
                 } else {
                     placedTetrominoesList.add(currentTetromino);
-
-                    currentTetromino = new ITetromino(new Point(5, 0));
+                    currentTetromino = null;
+                    currentTetromino = getRandomTetromino();
                 }
 
+                // Updating Visuals
                 repaint();
             }
 
         });
 
         timer.start();
+    }
+
+    public Tetromino getRandomTetromino() {
+        int i = random.nextInt(3);
+
+        switch (i) {
+            case 1:
+                return new ITetromino(new Point(5, 0));
+            
+            case 2:
+                return new LTetromino(new Point(5, 0));
+
+            default:
+                return new ITetromino(new Point(5, 0));
+        }
     }
 
     public boolean checkLeftCollision(Tetromino tetromino) {
@@ -171,6 +189,13 @@ public class TetrisPanel extends JPanel implements KeyListener {
                     repaint();
                 }
                 break;
+
+            case KeyEvent.VK_R:
+                if (!checkRightCollision(currentTetromino) & !checkLeftCollision(currentTetromino)
+                        & !checkBelowCollision(currentTetromino)) {
+                    currentTetromino.rotateClockwise();
+                    repaint();
+                }
 
             default:
                 break;
